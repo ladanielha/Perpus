@@ -18,7 +18,7 @@ This is a library management system built with Laravel.
    git clone https://github.com/ladanielha/Perpus
 2. Go to reposistory folder  
     ```bash
-    cd Laravel-libraray-management-system
+    cd Perpus
 3. Install Composer  
     ```bash
     composer install
