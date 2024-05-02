@@ -72,7 +72,6 @@ Route::middleware('auth')->group(function () {
     
     //Routing Report 
     Route::get('/report', [BorrowController::class, 'borrowreport'])->name('report.index');
-
     
     //Routing Edit Prodfile
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

@@ -54,8 +54,8 @@ class BookController extends Controller
          * Validate request books
          */
         $request->validate([
-            'name' => 'required',
-            'authorname' => 'required',
+            'name' => 'required|min:3|max:100',
+            'authorname' => 'required|min:3|max:100',
             'selectedCategories' => 'required',
             'selectedLocation' => 'required',
             'selectedPublisher' => 'required',
@@ -108,22 +108,20 @@ class BookController extends Controller
          * Validate request books
          */
         $request->validate([
-            'title' => 'required',
-            'publisher' => 'required',
-            'category' => 'required',
-            'publish_year' => 'required',
-            'location' => 'required',
-            'date_book_in' => 'required',
-            'price' => 'required',
+            'name' => 'required|min:3|max:100',
+            'authorname' => 'required|min:3|max:100',
+            'selectedCategories' => 'required',
+            'selectedLocation' => 'required',
+            'selectedPublisher' => 'required',
         ]);
 
         $books = Book::find($id);
         $books->name = $request->name;
-        $books->author = $request->author;
-        $books->category_id = $request->category_id;
-        $books->location_id = $request->location_id;
-        $books->publisher_id = $request->publisher_id;
-        $books->status = $request->status;
+        $books->author = $request->authorname;
+        $books->category_id = $request->selectedCategories;
+        $books->location_id = $request->selectedLocation;
+        $books->publisher_id = $request->selectedPublisher;
+        //$books->status = $request->status;
         $books->save();
 
         //redirect

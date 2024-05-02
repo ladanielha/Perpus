@@ -12,7 +12,6 @@ export default function BookEdit({
     locations,
     publishers,
 }) {
-    console.log(book);
     const [name, setName] = useState(book.name);
     const [authorname, setAuthor] = useState(book.author);
     const [selectedCategories, setSelectedCategories] = useState(book.category);
@@ -46,8 +45,8 @@ export default function BookEdit({
             selectedLocation,
             selectedPublisher
         );
-        router.post(
-            "/books/update",
+        router.put(
+            `/books/update/${book.id}`,
             {
                 name,
                 authorname,
