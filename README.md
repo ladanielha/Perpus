@@ -38,6 +38,10 @@ This is a library management system built with Laravel.
     ```bash
     npm run dev 
     php artisan serve
+9. Login
+    ```bash
+    admin@gmail.com 
+    password
 
 
 
