@@ -34,7 +34,7 @@ This is a library management system built with Laravel.
 7. Migrate Database
     ```bash
     php artisan migrate:fresh --seed
-8. Run prpject eith 
+8. Run project with 
     ```bash
     npm run dev 
     php artisan serve
