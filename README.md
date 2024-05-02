@@ -8,3 +8,37 @@
 </p>
 
 ## Library Admin System
+
+This is a library management system built with Laravel.
+
+## Installation
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/ladanielha/Perpus
+2. Go to reposistory folder  
+    ```bash
+    cd Laravel-libraray-management-system
+3. Install Composer  
+    ```bash
+    composer install
+4. Install Node Modules
+    ```bash
+    npm install
+5. Make ENV file with 
+    ```bash
+    copy .env.example .env
+6. Generate key
+    ```bash
+    php artisan key:generate
+7. Migrate Database
+    ```bash
+    php artisan migrate:fresh --seed
+8. Run prpject eith 
+    ```bash
+    npm run dev 
+    php artisan serve
+
+
+
+
