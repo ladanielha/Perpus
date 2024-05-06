@@ -44,9 +44,8 @@ class BorrowController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'borrowDate' => 'required',
-
-            'maxReturnDate' => 'required',
+            'borrowDate' => 'required|date|after_or_equal:today',
+            'maxReturnDate' => 'required|date|after_or_equal:borrowDate',
             'selectedStudent' => 'required',
             'selectedBook' => 'required',
         ]);
@@ -97,8 +96,7 @@ class BorrowController extends Controller
     {
         $request->validate([
             'borrowDate' => 'required',
-            'returnDate' => 'required',
-            'maxReturnDate' => 'required',
+            'maxReturnDate' => 'required|date|after_or_equal:borrowDate',
             'selectedStudent' => 'required',
             'selectedBook' => 'required',
         ]);
