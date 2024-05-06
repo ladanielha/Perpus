@@ -1,5 +1,6 @@
 import Delete from "@/Components/Delete";
 import Pagination from "@/Components/Pagination";
+import PrimaryButton from "@/Components/PrimaryButton";
 import Search from "@/Components/Search";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, Link, usePage } from "@inertiajs/react";
@@ -54,7 +55,11 @@ export default function Dashboard({ auth }) {
                                         key={index}
                                         className="border-b border-neutral-200 dark:border-white/10"
                                     >
-                                        <td className="text-center">{++index + (students.current_page-1) * students.per_page}</td>
+                                        <td className="text-center">
+                                            {++index +
+                                                (students.current_page - 1) *
+                                                    students.per_page}
+                                        </td>
                                         <td className="whitespace-wrap  px-6 py-4">
                                             {student.name}
                                         </td>
@@ -70,23 +75,26 @@ export default function Dashboard({ auth }) {
                                         <td className="whitespace-wrap  px-6 py-4">
                                             {student.class}
                                         </td>
-                                        <td className="whitespace-wrap  px-6 py-4">
-                                            <Link
-                                                className="px-2 py-2 bg-yellow-400 border rounded-md hover:bg-yellow-800 hover:text-white"
-                                                href={`student/edit/${student.id}`}
-                                            >
-                                                Edit
-                                            </Link>
-                                            <Delete
-                                                URL={"/student/delete"}
-                                                id={student.id}
-                                            />
+                                        <td className="whitespace-nowrap  px-6 py-4">
+                                            <div className="flex gap-2">
+                                                <Link
+                                                    href={`student/edit/${student.id}`}
+                                                >
+                                                    <PrimaryButton>
+                                                        Edit
+                                                    </PrimaryButton>
+                                                </Link>
+                                                <Delete
+                                                    URL={"/student/delete"}
+                                                    id={student.id}
+                                                />
+                                            </div>
                                         </td>
                                     </tr>
                                 ))}
                             </tbody>
                         </table>
-                        <Pagination links={students.links} align="center"/>
+                        <Pagination links={students.links} align="center" />
                     </div>
                 </div>
             </div>

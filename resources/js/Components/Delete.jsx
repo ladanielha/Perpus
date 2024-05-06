@@ -1,11 +1,8 @@
-//import react  
 import React from "react";
-
-//import inertia router
+import { FaTrashAlt } from "react-icons/fa";
 import { router } from '@inertiajs/react';
-
-//import Sweet Alert
 import Swal from 'sweetalert2';
+import PrimaryButton from "./PrimaryButton";
 
 export default function Delete({ URL, id }) {
 
@@ -40,9 +37,9 @@ export default function Delete({ URL, id }) {
 
     return (
     	<>
-    		<button 
+    		<PrimaryButton 
             className="px-2 py-2 bg-red-600 border rounded-md hover:bg-orange-800 text-white"
-            onClick={() => destroy(id)} ><i className="fa fa-trash"></i>Delete</button>
+            onClick={() => destroy(id)} >Delete</PrimaryButton>
     	</>
     )
 

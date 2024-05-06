@@ -1,16 +1,15 @@
 import Delete from "@/Components/Delete";
 import Pagination from "@/Components/Pagination";
+import PrimaryButton from "@/Components/PrimaryButton";
 import Search from "@/Components/Search";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { formatDate, formatDatetime } from "@/Utils/UseFormatter";
 import { Head, Link, usePage } from "@inertiajs/react";
 
-
 export default function Dashboard({ auth }) {
     const { books } = usePage().props;
     return (
-        <AuthenticatedLayout
-        >
+        <AuthenticatedLayout>
             <Head title="Books" />
 
             <div className="py-12">
@@ -64,7 +63,11 @@ export default function Dashboard({ auth }) {
                                         key={index}
                                         className="border-b border-neutral-200 dark:border-white/10"
                                     >
-                                        <td className="text-center">{++index + (books.current_page-1) * books.per_page}</td>
+                                        <td className="text-center">
+                                            {++index +
+                                                (books.current_page - 1) *
+                                                    books.per_page}
+                                        </td>
                                         <td className="whitespace-wrap  px-6 py-4">
                                             {book.name}
                                         </td>
@@ -81,30 +84,41 @@ export default function Dashboard({ auth }) {
                                             {book.location.name}
                                         </td>
                                         <td className="whitespace-wrap  px-6 py-4">
-                                            <span className={`border rounded-md px-2 py-2 text-sm ${book.status === 'AVAILABLE' ? 'bg-green-400 ' : 'bg-red-400'}`}>
-                                                {book.status === 'AVAILABLE' ? 'Available' : 'NotAvailable'}
+                                            <span
+                                                className={`border rounded-md px-2 py-2 text-sm ${
+                                                    book.status === "AVAILABLE"
+                                                        ? "bg-green-400 "
+                                                        : "bg-red-400"
+                                                }`}
+                                            >
+                                                {book.status === "AVAILABLE"
+                                                    ? "Available"
+                                                    : "NotAvailable"}
                                             </span>
                                         </td>
                                         <td className="whitespace-wrap  px-6 py-4">
                                             {formatDatetime(book.created_at)}
                                         </td>
-                                        <td className="whitespace-wrap  px-6 py-4">
-                                            <Link
-                                                className="px-2 py-2 bg-yellow-400 border rounded-md hover:bg-yellow-800 hover:text-white"
-                                                href={`books/edit/${book.id}`}
-                                            >
-                                                Edit
-                                            </Link>
-                                            <Delete
-                                                URL={"/books/delete"}
-                                                id={book.id}
-                                            />
+                                        <td className="whitespace-nowrap gap-2 px-6 py-4">
+                                            <div className="flex gap-2">
+                                                <Link
+                                                    href={`books/edit/${book.id}`}
+                                                >
+                                                    <PrimaryButton>
+                                                        Edit
+                                                    </PrimaryButton>
+                                                </Link>
+                                                <Delete
+                                                    URL={"/books/delete"}
+                                                    id={book.id}
+                                                />
+                                            </div>
                                         </td>
                                     </tr>
                                 ))}
                             </tbody>
                         </table>
-                        <Pagination links={books.links} align="center"/>
+                        <Pagination links={books.links} align="center" />
                     </div>
                 </div>
             </div>

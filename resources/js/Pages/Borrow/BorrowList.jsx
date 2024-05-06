@@ -1,5 +1,6 @@
 import Delete from "@/Components/Delete";
 import Pagination from "@/Components/Pagination";
+import PrimaryButton from "@/Components/PrimaryButton";
 import Search from "@/Components/Search";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { formatDate, formatDatetime } from "@/Utils/UseFormatter";
@@ -20,7 +21,7 @@ export default function BorrowList({ auth }) {
                                 href="/borrow/create"
                                 className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
                             >
-                                Add Borrow 
+                                Add Borrow
                             </Link>
                         </div>
                         <table className="min-w-full text-center text-lg font-light text-surface text-black">
@@ -58,7 +59,11 @@ export default function BorrowList({ auth }) {
                                         key={index}
                                         className="border-b border-neutral-200 dark:border-white/10"
                                     >
-                                        <td className="text-center">{++index + (borrows.current_page-1) * borrows.per_page}</td>
+                                        <td className="text-center">
+                                            {++index +
+                                                (borrows.current_page - 1) *
+                                                    borrows.per_page}
+                                        </td>
                                         <td className=" px-6 py-4">
                                             {borrow.book.name}
                                         </td>
@@ -69,33 +74,57 @@ export default function BorrowList({ auth }) {
                                             {formatDate(borrow.borrow_date)}
                                         </td>
                                         <td className=" px-6 py-4">
-                                            {formatDatetime(borrow.return_date) ? formatDatetime(borrow.return_date) : 'Not' }
+                                            {formatDatetime(borrow.return_date)
+                                                ? formatDatetime(
+                                                    borrow.return_date
+                                                )
+                                                : "Not"}
                                         </td>
                                         <td className=" px-6 py-4">
                                             {formatDate(borrow.return_day)}
                                         </td>
                                         <td className=" px-6 py-4">
-                                            <span className={`border rounded-md px-2 py-2 text-sm ${borrow.status === 'RETURN' ? 'bg-green-400 ' : 'bg-red-400'}`}>
-                                                {borrow.status === 'RETURN' ? 'Return' : 'NotReturn'}
+                                            <span
+                                                className={`border rounded-md px-2 py-2 text-sm ${
+                                                    borrow.status === "RETURN"
+                                                        ? "bg-green-400 "
+                                                        : "bg-red-400"
+                                                }`}
+                                            >
+                                                {borrow.status === "RETURN"
+                                                    ? "Return"
+                                                    : "NotReturn"}
                                             </span>
                                         </td>
-                                        <td className=" px-6 py-4">
-                                            <Link
-                                                className="px-2 py-2 bg-yellow-400 border rounded-md hover:bg-yellow-800 hover:text-white"
-                                                href={`borrow/edit/${borrow.id}`}
-                                            >
-                                                Edit
-                                            </Link>
-                                            <Delete
-                                                URL={"/borrow/delete"}
-                                                id={borrow.id}
-                                            />
+                                        <td className="whitespace-nowrap px-6 py-4">
+                                            <div className="flex gap-2">
+                                                <Link
+                                                    href={`borrow/edit/${borrow.id}`}
+                                                    className="border-spacing-3"
+                                                >
+                                                    <PrimaryButton className="bg-yellow-500">
+                                                        Return
+                                                    </PrimaryButton>
+                                                </Link>
+                                                <Link
+                                                    href={`borrow/edit/${borrow.id}`}
+                                                    className="border-spacing-3"
+                                                >
+                                                    <PrimaryButton>
+                                                        Edit
+                                                    </PrimaryButton>
+                                                </Link>
+                                                <Delete
+                                                    URL={"/borrow/delete"}
+                                                    id={borrow.id}
+                                                />
+                                            </div>
                                         </td>
                                     </tr>
                                 ))}
                             </tbody>
                         </table>
-                        <Pagination links={borrows.links} align="center"/>
+                        <Pagination links={borrows.links} align="center" />
                     </div>
                 </div>
             </div>

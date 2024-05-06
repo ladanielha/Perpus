@@ -10,9 +10,10 @@ export default function BorrowEdit({
     books,
     students,
 }) {
+    console.log(borrow);
     const [borrowDate, setBorrowDate] = useState(borrow.borrow_date);
-    const [returnDate, setReturnDate] = useState(borrow.borrow_date);
-    const [maxReturnDate, setMaxReturnDate] = useState(borrow.borrow_date);
+    const [returnDate, setReturnDate] = useState("");
+    const [maxReturnDate, setMaxReturnDate] = useState(borrow.return_day);
     const [selectedStudent, setSelectedStudent] = useState(borrow.student_id);
     const [selectedBook, setSelectedBook] = useState(borrow.book_id);
     const [status, setSelectedStatus] = useState(borrow.status);

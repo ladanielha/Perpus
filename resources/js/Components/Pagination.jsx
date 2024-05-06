@@ -10,7 +10,7 @@ const Pagination = ({ links, align }) => {
 
     return (
         <nav>
-            <ul className={`pagination flex justify-${align} mb-0`}>
+            <ul className={`pagination flex justify-${align} mb-0 gap-2`}>
                 {links.map((link, index) => (
                     <li className={`page-item ${link.active ? 'active' : ''}`} key={index}>
                         <Link 

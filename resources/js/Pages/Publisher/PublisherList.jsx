@@ -2,7 +2,9 @@ import Delete from "@/Components/Delete";
 import Search from "@/Components/Search";
 import Pagination from "@/Components/Pagination";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
+import { FaEdit } from "react-icons/fa";
 import { Head, Link, usePage } from "@inertiajs/react";
+import PrimaryButton from "@/Components/PrimaryButton";
 
 export default function PublisherList() {
     const { publishers } = usePage().props;
@@ -50,16 +52,17 @@ export default function PublisherList() {
                                             {publisher.name}
                                         </td>
                                         <td className="whitespace-nowrap px-6 py-4">
-                                            <Link
-                                                className="px-2 py-2 bg-yellow-400 border rounded-md hover:bg-yellow-800 hover:text-white"
-                                                href={`publisher/edit/${publisher.id}`}
-                                            >
-                                                Edit
-                                            </Link>
-                                            <Delete
-                                                URL={"/publisher/delete"}
-                                                id={publisher.id}
-                                            />
+                                            <div className="flex gap-2">
+                                                <Link
+                                                    href={`publisher/edit/${publisher.id}`}
+                                                >
+                                                <PrimaryButton>Edit</PrimaryButton>
+                                                </Link>
+                                                <Delete
+                                                    URL={"/publisher/delete"}
+                                                    id={publisher.id}
+                                                />
+                                            </div>
                                         </td>
                                     </tr>
                                 ))}

@@ -1,11 +1,14 @@
+import DangerButton from "@/Components/DangerButton";
 import Delete from "@/Components/Delete";
 import Pagination from "@/Components/Pagination";
+import PrimaryButton from "@/Components/PrimaryButton";
 import Search from "@/Components/Search";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, Link, usePage } from "@inertiajs/react";
+import { FaEdit } from "react-icons/fa";
 
 export default function CategoryList() {
-    const { categories ,errors,info,flash,failed} = usePage().props;
+    const { categories, errors, info, flash, failed } = usePage().props;
     return (
         <AuthenticatedLayout>
             <Head title="Category" />
@@ -42,21 +45,28 @@ export default function CategoryList() {
                                         key={index}
                                         className="border-b border-neutral-200 dark:border-white/10"
                                     >
-                                        <td className="text-center">{++index + (categories.current_page-1) * categories.per_page}</td>
+                                        <td className="text-center">
+                                            {++index +
+                                                (categories.current_page - 1) *
+                                                    categories.per_page}
+                                        </td>
                                         <td className="whitespace-wrap px-6 py-4">
                                             {category.name}
                                         </td>
-                                        <td className="whitespace-wrap px-6 py-4">
-                                            <Link
-                                                className="px-2 py-2 bg-yellow-400 border rounded-md hover:bg-yellow-800 hover:text-white"
-                                                href={`category/edit/${category.id}`}
-                                            >
-                                                Edit
-                                            </Link>
-                                            <Delete
-                                                URL={"/category/delete"}
-                                                id={category.id}
-                                            />
+                                        <td className="whitespace-nowrap px-6 py-4 flex justify-center">
+                                            <div className="flex gap-2">
+                                                <Link
+                                                    href={`category/edit/${category.id}`}
+                                                >
+                                                    <PrimaryButton>
+                                                        Edit
+                                                    </PrimaryButton>
+                                                </Link>
+                                                <Delete
+                                                    URL={"/category/delete"}
+                                                    id={category.id}
+                                                />
+                                            </div>
                                         </td>
                                     </tr>
                                 ))}

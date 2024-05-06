@@ -69,6 +69,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/borrow/edit/{id}', [BorrowController::class, 'edit'])->name('borrow.edit');
     Route::put('/borrow/update/{id}', [BorrowController::class, 'update'])->name('borrow.update');
     Route::delete('/borrow/delete/{id}', [BorrowController::class, 'destroy'])->name('borrow.destroy');
+    Route::delete('/borrow/return/{id}', [BorrowController::class, 'return'])->name('borrow.return');
     
     //Routing Report 
     Route::get('/report', [BorrowController::class, 'borrowreport'])->name('report.index');
