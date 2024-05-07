@@ -83,7 +83,7 @@ export default function Dashboard({ auth }) {
                                         <td className="whitespace-wrap  px-6 py-4">
                                             {book.location.name}
                                         </td>
-                                        <td className="whitespace-wrap  px-6 py-4">
+                                        <td className="whitespace-wrap px-6 py-4">
                                             <span
                                                 className={`border rounded-md px-2 py-2 text-sm ${
                                                     book.status === "AVAILABLE"

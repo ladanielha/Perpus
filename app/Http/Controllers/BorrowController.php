@@ -174,10 +174,10 @@ class BorrowController extends Controller
 
     public function returnbook(Request $request, string $borrowid, string $bookid)
     {
+        $request->validate([
+            'returnDate' => 'required|date|after_or_equal:borrowDate',
+        ]);
         try {
-            $request->validate([
-                'returnDate' => 'required|date|after_or_equal:borrowDate',
-            ]);
             DB::beginTransaction();
 
             $borrow = Borrow::findOrFail($borrowid);

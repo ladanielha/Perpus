@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Setting;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -24,6 +25,10 @@ class DatabaseSeeder extends Seeder
             'name' => 'Administrator',
             'email' => 'admin1@gmail.com',
             'password' => 'password'
+        ]);
+        Setting::create([
+            'id' => 'R001',
+            'return_days' =>14,
         ]);
         
         $this->call(CategorySeeder::class);

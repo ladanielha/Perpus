@@ -149,13 +149,7 @@ export default function BorrowList({ auth }) {
                                         <td className="whitespace-nowrap px-6 py-4">
                                             <div className="flex gap-2">
                                                 {borrow.status === "RETURN" ? (
-                                                    <div
-                                                        className="border-spacing-3 "
-                                                    >
-                                                        <PrimaryButton className=" bg-yellow-600" disabled>
-                                                            Return
-                                                        </PrimaryButton>
-                                                    </div>
+                                                    ""
                                                 ) : (
                                                     <Link
                                                         href={`borrow/${borrow.id}/${borrow.book.id}}`}
@@ -174,10 +168,14 @@ export default function BorrowList({ auth }) {
                                                         Edit
                                                     </PrimaryButton>
                                                 </Link>
-                                                <Delete
-                                                    URL={"/borrow/delete"}
-                                                    id={borrow.id}
-                                                />
+                                                {borrow.status === "RETURN" ? (
+                                                    ""
+                                                ) : (
+                                                    <Delete
+                                                        URL={"/borrow/delete"}
+                                                        id={borrow.id}
+                                                    />
+                                                )}
                                             </div>
                                             {/* <Modal
                                                 show={modalOpen}
