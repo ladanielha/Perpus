@@ -3,10 +3,10 @@
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\BorrowController;
 use App\Http\Controllers\CategoryController;
-use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PublisherController;
+use App\Http\Controllers\SettingController;
 use App\Http\Controllers\StudentController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -29,6 +29,10 @@ Route::middleware('auth')->group(function () {
     
     //Routing Dashboard
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    
+    //Routing Setting Rules
+    Route::get('/settingrules', [SettingController::class, 'index'])->name('settingrules.index');
+    Route::put('/settingrules/edit/{id}', [SettingController::class, 'update'])->name('settingrules.update');
     
     //Routing Student
     Route::get('/student', [StudentController::class, 'index'])->name('student.index');
@@ -69,7 +73,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/borrow/edit/{id}', [BorrowController::class, 'edit'])->name('borrow.edit');
     Route::put('/borrow/update/{id}', [BorrowController::class, 'update'])->name('borrow.update');
     Route::delete('/borrow/delete/{id}', [BorrowController::class, 'destroy'])->name('borrow.destroy');
-    Route::delete('/borrow/return/{id}', [BorrowController::class, 'return'])->name('borrow.return');
+    Route::put('/borrow/return/{borrowid}/{bookid}', [BorrowController::class, 'return'])->name('borrow.return');
     
     //Routing Report 
     Route::get('/report', [BorrowController::class, 'borrowreport'])->name('report.index');

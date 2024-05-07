@@ -1,3 +1,4 @@
+import InputError from "@/Components/InputError";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, router } from "@inertiajs/react";
 import { useState } from "react";
@@ -48,39 +49,39 @@ export default function CategoryCreate({ auth, errors }) {
                             <div className="space-y-12">
                                 <div className="border-b border-gray-900/10 pb-12">
                                     <h2 className="text-base font-semibold leading-7 text-gray-900">
-                                        New Books
+                                        New Publisher
                                     </h2>
-                                    <div className="row">
-                                        <div className="col-md-6">
-                                            <div className="mb-3">
-                                                <label className="form-label fw-bold">
-                                                    Publisher Name:
-                                                </label>
-                                                <input
-                                                    type="text"
-                                                    name="name"
-                                                    id="name"
-                                                    value={name}
-                                                    onChange={(e) =>
-                                                        setName(e.target.value)
-                                                    }
-                                                />
-                                            </div>
+                                </div>
+                            </div>
+                            <div class="flex flex-wrap">
+                                <div class="w-full md:w-1/2 mb-6 md:mb-0 flex-row">
+                                    <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
+                                        Category 
+                                    </label>
+                                    <input
+                                        class="appearance-none block w-full bg-white text-gray-700 border rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
+                                        id="grid-first-name"
+                                        type="text"
+                                        placeholder="Jane"
+                                        name="name"
+                                        value={name}
+                                        onChange={(e) =>
+                                            setName(e.target.value)
+                                        }
+                                    />
+                                    <InputError
+                                        message={errors.name}
+                                        className="mt-2"
+                                    />
+                                    <div className="border-b border-gray-900/10 pb-12 end-0 flex justify-end">
+                                        <div>
+                                            <button
+                                                type="submit"
+                                                className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                                            >
+                                                Submit
+                                            </button>
                                         </div>
-                                        {errors.name && (
-                                            <div className="text-red-600">
-                                                *{errors.name}
-                                            </div>
-                                        )}
-                                    </div>
-                                    <div>
-                                        <button
-                                            type="Submit"
-                                            className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                                        >
-                                            <i className="fa fa-redo"></i>{" "}
-                                            Submit
-                                        </button>
                                     </div>
                                 </div>
                             </div>

@@ -6,6 +6,7 @@ use App\Models\Book;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Borrow;
+use App\Models\Setting;
 use App\Models\Student;
 use Exception;
 use Illuminate\Support\Facades\DB;
@@ -25,12 +26,12 @@ class BorrowController extends Controller
                 $query->where('name', 'like', '%' . request()->q . '%');
             });
         })->with('student', 'book')->latest()->paginate(5);
-        
+
         $borrows->appends(['q' => request()->q]);
         return Inertia::render('Borrow/BorrowList', [
             'borrows' => $borrows,
         ]);
-        
+
     }
     /**
      * Show the form for creating a new resource.
@@ -51,31 +52,34 @@ class BorrowController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'borrowDate' => 'required|date|after_or_equal:today',
-            'maxReturnDate' => 'required|date|after_or_equal:borrowDate',
+            'borrowDate' => 'required|date|before_or_equal:today',
             'selectedStudent' => 'required',
             'selectedBook' => 'required',
         ]);
         try {
             DB::beginTransaction();
+            $borrowDate = $request->borrowDate;
+            $returnDays = Setting::latest()->first()->return_days;
+            $maxReturnDate = date('Y-m-d', strtotime("+$returnDays days", strtotime($borrowDate)));
             $borrow = Borrow::create([
                 'student_id' => $request->selectedStudent,
                 'book_id' => $request->selectedBook,
-                'borrow_date' => $request->borrowDate ?? null,
-                'return_date' => $request->returnDate,
-                'return_day' => $request->maxReturnDate,
+                'borrow_date' => $borrowDate,
+                'return_date' => null,
+                'return_day' => $maxReturnDate,
                 'status' => 'NOTRETURN',
             ]);
             $book = Book::find($request->selectedBook);
             $book->status = 'NOTAVAILABLE';
             $book->save();
-            $respond = redirect()->route('borrow.index');
+            DB::commit();
+            return redirect()->route('borrow.index');
         } catch (Exception $exception) {
             DB::rollBack();
-            $respond = redirect()->back()->withInput()->withErrors("Gagal menambah data", $exception);
+            return redirect()->back()->withInput()->withErrors(['error' => $exception->getMessage()]);
         }
-        //redirect
-        return $respond;
+
+
     }
 
     /**
@@ -107,33 +111,39 @@ class BorrowController extends Controller
     public function update(Request $request, string $id)
     {
         $request->validate([
-            'borrowDate' => 'required',
+            'borrowDate' => 'required|date|before_or_equal:today',
             'maxReturnDate' => 'required|date|after_or_equal:borrowDate',
             'selectedStudent' => 'required',
             'selectedBook' => 'required',
         ]);
-
-        $borrow = Borrow::findOrFail($id);
-        $borrow->student_id = $request->selectedStudent;
-        $borrow->book_id = $request->selectedBook;
-        $borrow->borrow_date = $request->borrowDate;
-        $borrow->return_date = $request->returnDate;
-        $borrow->return_day = $request->maxReturnDate;
-        $borrow->status = $request->status;
-        $borrow->save();
-
-        if ($request->status === 'RETURN') {
-            $book = Book::find($request->selectedBook);
-            $book->status = 'AVAILABLE';
-            $book->save();
-        } else if ($request->status === 'NOTRETURN') {
-            $book = Book::find($request->selectedBook);
-            $book->status = 'NOTAVAILABLE';
-            $book->save();
+        try {
+            DB::beginTransaction();
+            $borrow = Borrow::findOrFail($id);
+            if ($request->selectedBook !== $borrow->book_id) {
+                $lastbook = Book::find($borrow->book_id);
+                $lastbook->status = 'AVAILABLE';
+                $lastbook->save();
+                $borrow->book_id = $request->selectedBook;
+                $newbook = Book::find($request->selectedBook);
+                $newbook->status = 'NOTAVAILABLE';
+                $newbook->save();
+                //dd($lastbook);
+            }
+            else {
+                $borrow->book_id = $borrow->book_id;
+            } 
+            $borrow->student_id = $request->selectedStudent;
+            $borrow->borrow_date = $request->borrowDate;
+            $borrow->return_date = $request->returnDate;
+            $borrow->return_day = $request->maxReturnDate;
+            $borrow->save();
+            DB::commit();
+            return redirect()->route('borrow.index');
+        } catch (Exception $exception) {
+            DB::rollBack();
+            return redirect()->route('borrow.create')->withInput();
         }
 
-        //redirect
-        return redirect()->route('borrow.index');
     }
 
     /**
@@ -149,9 +159,16 @@ class BorrowController extends Controller
         return redirect()->route('borrow.index');
     }
 
-    public function return (string $id) {
-        $book = Borrow::findorfail($id);
-        
+    public function return(Request $request, string $borrowid, string $bookid)
+    {
+        dd($request);
+        $book = Borrow::findorfail($bookid);
+
+        $borrow = Borrow::findOrFail($borrowid);
+        $borrow->status = "RETURN";
+        $borrow->save();
+        //redirect
+        return redirect()->route('borrow.index');
 
     }
 

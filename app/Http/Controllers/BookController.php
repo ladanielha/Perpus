@@ -4,13 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Models\Book;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
-use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Location;
 use App\Models\Publisher;
+use Illuminate\Support\Facades\DB;
 use PharIo\Manifest\Author;
 
 class BookController extends Controller
@@ -49,30 +48,33 @@ class BookController extends Controller
      */
     public function store(Request $request)
     {
-        //dd($request);
-        /**
-         * Validate request books
-         */
-        $request->validate([
-            'name' => 'required|min:3|max:100',
-            'authorname' => 'required|min:3|max:100',
-            'selectedCategories' => 'required',
-            'selectedLocation' => 'required',
-            'selectedPublisher' => 'required',
-        ]);
+        try {
+            DB::beginTransaction();
+            $request->validate([
+                'name' => 'required|min:3|max:100',
+                'authorname' => 'required|min:3|max:100',
+                'selectedCategories' => 'required',
+                'selectedLocation' => 'required',
+                'selectedPublisher' => 'required',
+            ]);
+            $books = Book::create([
+                'name' => $request->name,
+                'author' => $request->authorname,
+                'category_id' => $request->selectedCategories,
+                'location_id' => $request->selectedLocation,
+                'publisher_id' => $request->selectedPublisher,
+                'status' => 'AVAILABLE',
+            ]);
+            DB::commit();
+            return redirect()->route('books.index');
+        } catch (\Exception $exception) {
+            DB::rollBack();
 
-        $books = Book::create([
-            'name' => $request->name,
-            'author' => $request->authorname,
-            'category_id' => $request->selectedCategories,
-            'location_id' => $request->selectedLocation,
-            'publisher_id' => $request->selectedPublisher,
-            'status' => 'AVAILABLE',
-        ]);
+            return redirect()->back()->withInput()->withErrors(['error' => $exception->getMessage()]);
+        }
 
-        //redirect
-        return redirect()->route('books.index');
     }
+
 
     /**
      * Display the specified resource.
@@ -104,28 +106,38 @@ class BookController extends Controller
      */
     public function update(Request $request, $id)
     {
-        /**
-         * Validate request books
-         */
-        $request->validate([
-            'name' => 'required|min:3|max:100',
-            'authorname' => 'required|min:3|max:100',
-            'selectedCategories' => 'required',
-            'selectedLocation' => 'required',
-            'selectedPublisher' => 'required',
-        ]);
+        try {
+            DB::beginTransaction();
+            // Validasi input
+            $request->validate([
+                'name' => 'required|min:3|max:100',
+                'authorname' => 'required|min:3|max:100',
+                'selectedCategories' => 'required',
+                'selectedLocation' => 'required',
+                'selectedPublisher' => 'required',
+            ]);
+            $book = Book::findOrFail($id);
+            if (
+                $request->name != $book->name ||
+                $request->authorname != $book->author ||
+                $request->selectedCategories != $book->category_id ||
+                $request->selectedLocation != $book->location_id ||
+                $request->selectedPublisher != $book->publisher_id
+            ) {
+                $book->name = $request->name;
+                $book->author = $request->authorname;
+                $book->category_id = $request->selectedCategories;
+                $book->location_id = $request->selectedLocation;
+                $book->publisher_id = $request->selectedPublisher;
+                $book->save();
+                DB::commit();
+                return redirect()->route('books.index');
+            }
+        } catch (\Exception $exception) {
+            DB::rollBack();
+            return redirect()->back()->withInput()->withErrors(['error' => $exception->getMessage()]);
+        }
 
-        $books = Book::find($id);
-        $books->name = $request->name;
-        $books->author = $request->authorname;
-        $books->category_id = $request->selectedCategories;
-        $books->location_id = $request->selectedLocation;
-        $books->publisher_id = $request->selectedPublisher;
-        //$books->status = $request->status;
-        $books->save();
-
-        //redirect
-        return redirect()->route('books.index');
     }
 
     /**

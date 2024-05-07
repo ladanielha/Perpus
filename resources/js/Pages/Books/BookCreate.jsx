@@ -11,8 +11,6 @@ export default function Dashboard({
     locations,
     publishers,
 }) {
-    console.log(errors);
-    console.log(categories, locations, publishers);
     const [name, setName] = useState("");
     const [authorname, setAuthor] = useState("");
     const [selectedCategories, setSelectedCategories] = useState("");
@@ -66,18 +64,11 @@ export default function Dashboard({
     };
 
     return (
-        <AuthenticatedLayout
-            user={auth.user}
-            header={
-                <h2 className="font-semibold text-xl text-gray-800 leading-tight">
-                    Dashboard
-                </h2>
-            }
-        >
+        <AuthenticatedLayout>
             <Head title="Books" />
             <div className="py-12">
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                    <div className="bg-blue-200 overflow-hidden shadow-sm sm:rounded-lg px-10">
+                    <div className="bg-slate-100 overflow-hidden shadow-sm sm:rounded-lg px-10">
                         <div className="p-6 text-gray-900">
                             Form Book Create
                         </div>

@@ -8,10 +8,10 @@ import { Head, Link, usePage } from "@inertiajs/react";
 
 export default function Dashboard({ auth }) {
     const { books } = usePage().props;
+    console.log(books);
     return (
         <AuthenticatedLayout>
             <Head title="Books" />
-
             <div className="py-12">
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
                     <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
@@ -38,10 +38,10 @@ export default function Dashboard({ auth }) {
                                         Author
                                     </th>
                                     <th scope="col" className=" px-6 py-4">
-                                        Publisher
+                                        Category
                                     </th>
                                     <th scope="col" className=" px-6 py-4">
-                                        Category
+                                        Publisher
                                     </th>
                                     <th scope="col" className=" px-6 py-4">
                                         Location
