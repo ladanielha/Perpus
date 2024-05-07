@@ -71,9 +71,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/borrow/create', [BorrowController::class, 'create'])->name('borrow.create');
     Route::post('/borrow/store', [BorrowController::class, 'store'])->name('borrow.store');
     Route::get('/borrow/edit/{id}', [BorrowController::class, 'edit'])->name('borrow.edit');
-    Route::put('/borrow/update/{id}', [BorrowController::class, 'update'])->name('borrow.update');
+    Route::patch('/borrow/update/{id}', [BorrowController::class, 'update'])->name('borrow.update');
     Route::delete('/borrow/delete/{id}', [BorrowController::class, 'destroy'])->name('borrow.destroy');
-    Route::put('/borrow/return/{borrowid}/{bookid}', [BorrowController::class, 'return'])->name('borrow.return');
+    Route::get('/borrow/{borrowid}/{bookid}', [BorrowController::class, 'formreturn'])->name('borrow.formreturn');
+    Route::patch('/borrow/return/{borrowid}/{bookid}', [BorrowController::class, 'returnbook'])->name('borrow.return');
     
     //Routing Report 
     Route::get('/report', [BorrowController::class, 'borrowreport'])->name('report.index');

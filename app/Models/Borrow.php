@@ -10,6 +10,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Borrow extends Model
 {
     use HasFactory, HasUlids;
+
+    protected $table = "borrows";
          /**
      * fillable
      *

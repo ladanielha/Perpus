@@ -1,32 +1,63 @@
 import Delete from "@/Components/Delete";
+import InputError from "@/Components/InputError";
 import Modal from "@/Components/Modal";
 import Pagination from "@/Components/Pagination";
 import PrimaryButton from "@/Components/PrimaryButton";
 import Search from "@/Components/Search";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { formatDate, formatDatetime } from "@/Utils/UseFormatter";
-import { Head, Link, usePage } from "@inertiajs/react";
+import { Head, Link, router, usePage } from "@inertiajs/react";
 import { useState } from "react";
+import Swal from "sweetalert2";
 
 export default function BorrowList({ auth }) {
-    const { borrows } = usePage().props;
+    const { borrows, errors } = usePage().props;
     const [modalOpen, setModalOpen] = useState(false);
-    const [selectedBookId, setSelectedBookId] = useState(null);
+    const [returnDate, setReturnDate] = useState("");
+    const [selectedBorrowId, setSelectedBorrowId] = useState("");
+    const [selectedBook, setSelectedBook] = useState(null);
+    const [setdata, setData] = useState(null);
 
     const handleReturnClick = (bookId) => {
-        setSelectedBookId(bookId);
+        console.log(bookId.id);
+        setData(bookId);
+        setReturnDate("");
+        setSelectedBorrowId(bookId.id);
+        setSelectedBook(bookId.book_id);
         setModalOpen(true);
     };
-
     const handleCloseModal = () => {
-        setSelectedBookId(null);
         setModalOpen(false);
     };
-
-    const handleReturnConfirm = () => {
-        console.log()
-        handleCloseModal();
+    const handleOpenModal = () => {
+        setModalOpen(true);
     };
+    const handleReturnConfirm = () => {
+        console.log("Return Date:", returnDate);
+        console.log("Selected Book:", selectedBook);
+        router.put(
+            `/borrow/return/${selectedBorrowId}/${selectedBook}`,
+            {
+                returnDate,
+                selectedBook,
+                borrowData: setdata, // Assuming setdata contains the data from borrow[0]
+            },
+            {
+                onSuccess: () => {
+                    //show notif alert
+                    Swal.fire({
+                        title: "Success!",
+                        text: "Book Return successfully!",
+                        icon: "success",
+                        showConfirmButton: false,
+                        timer: 1500,
+                    });
+                    setModalOpen(false); // Close the modal on success
+                },
+            }
+        );
+    };
+
     return (
         <AuthenticatedLayout>
             <Head title="Borrow" />
@@ -117,19 +148,27 @@ export default function BorrowList({ auth }) {
                                         </td>
                                         <td className="whitespace-nowrap px-6 py-4">
                                             <div className="flex gap-2">
-                                                <PrimaryButton
-                                                    className="bg-yellow-500"
-                                                    onClick={() =>
-                                                        handleReturnClick(
-                                                            borrow
-                                                        )
-                                                    }
-                                                >
-                                                    Return
-                                                </PrimaryButton>
+                                                {borrow.status === "RETURN" ? (
+                                                    <div
+                                                        className="border-spacing-3 "
+                                                    >
+                                                        <PrimaryButton className=" bg-yellow-600" disabled>
+                                                            Return
+                                                        </PrimaryButton>
+                                                    </div>
+                                                ) : (
+                                                    <Link
+                                                        href={`borrow/${borrow.id}/${borrow.book.id}}`}
+                                                        className="border-spacing-3 "
+                                                    >
+                                                        <PrimaryButton className=" bg-yellow-600">
+                                                            Return
+                                                        </PrimaryButton>
+                                                    </Link>
+                                                )}
                                                 <Link
                                                     href={`borrow/edit/${borrow.id}`}
-                                                    className="border-spacing-3"
+                                                    className="border-spacing-3 "
                                                 >
                                                     <PrimaryButton>
                                                         Edit
@@ -140,6 +179,59 @@ export default function BorrowList({ auth }) {
                                                     id={borrow.id}
                                                 />
                                             </div>
+                                            {/* <Modal
+                                                show={modalOpen}
+                                                onClose={handleCloseModal}
+                                                maxWidth="md"
+                                            >
+                                                <div className="p-6">
+                                                    <h2 className="text-lg font-bold mb-4">
+                                                        Confirm Return
+                                                    </h2>
+                                                    <div className="w-full ">
+                                                        <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
+                                                            Return Date:
+                                                        </label>
+                                                        <input
+                                                            autoFocus
+                                                            className="block w-full bg-white text-gray-700 border rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
+                                                            type="date"
+                                                            value={returnDate}
+                                                            onChange={(e) =>
+                                                                setReturnDate(
+                                                                    e.target
+                                                                        .value
+                                                                )
+                                                            }
+                                                        />
+                                                        <InputError
+                                                            message={
+                                                                errors.returnDate
+                                                            }
+                                                            className="mt-2"
+                                                        />
+                                                    </div>
+                                                    <p>Return this Book ?</p>
+                                                    <div className="flex justify-end mt-4 ">
+                                                        <PrimaryButton
+                                                            onClick={
+                                                                handleReturnConfirm
+                                                            }
+                                                            className="bg-blue-500 overflow-hidden hover:bg-blue-600 text-white px-4 py-2 rounded mr-4"
+                                                        >
+                                                            Confirm
+                                                        </PrimaryButton>
+                                                        <button
+                                                            onClick={
+                                                                handleCloseModal
+                                                            }
+                                                            className="bg-red-600 border rounded-md hover:bg-orange-800 text-white px-4 py-2"
+                                                        >
+                                                            Cancel
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </Modal> */}
                                         </td>
                                     </tr>
                                 ))}
@@ -148,32 +240,6 @@ export default function BorrowList({ auth }) {
                         <Pagination links={borrows.links} align="center" />
                     </div>
                 </div>
-                <Modal
-                    show={modalOpen}
-                    onClose={handleCloseModal}
-                    maxWidth="md"
-                >
-                    <div className="p-6">
-                        <h2 className="text-lg font-bold mb-4">
-                            Confirm Return
-                        </h2>
-                        <p>Return this Book ? </p>
-                        <div className="flex justify-end mt-4">
-                            <PrimaryButton
-                                onClick={handleReturnConfirm}
-                                className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded mr-4"
-                            >
-                                Confirm
-                            </PrimaryButton>
-                            <button
-                                onClick={handleCloseModal}
-                                className="bg-red-600 border rounded-md hover:bg-orange-800 text-white px-4 py-2"
-                            >
-                                Cancel
-                            </button>
-                        </div>
-                    </div>
-                </Modal>
             </div>
         </AuthenticatedLayout>
     );

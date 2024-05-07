@@ -7,32 +7,25 @@ import Swal from "sweetalert2";
 export default function BorrowEdit({ borrow, errors, books, students }) {
     console.log(borrow);
     const [borrowDate, setBorrowDate] = useState(borrow.borrow_date);
-    const [returnDate, setReturnDate] = useState("");
     const [maxReturnDate, setMaxReturnDate] = useState(borrow.return_day);
     const [selectedStudent, setSelectedStudent] = useState(borrow.student_id);
     const [selectedBook, setSelectedBook] = useState(borrow.book_id);
     const [status, setSelectedStatus] = useState(borrow.status);
-
     const handleStudentChange = (e) => {
         setSelectedStudent(e.target.value);
     };
-
     const handleBookChange = (e) => {
         setSelectedBook(e.target.value);
     };
 
-    const handleStatusChange = (e) => {
-        setSelectedStatus(e.target.value);
-    };
-
+   
     const updateBorrow = async (e) => {
         e.preventDefault();
         console.log(selectedStudent, selectedBook);
-        router.put(
+        router.patch(
             `/borrow/update/${borrow.id}`,
             {
                 borrowDate,
-                returnDate,
                 maxReturnDate,
                 selectedBook,
                 selectedStudent,
@@ -121,7 +114,7 @@ export default function BorrowEdit({ borrow, errors, books, students }) {
                                     </div>
                                 </div>
                                 <div class="flex flex-wrap">
-                                    <div class="w-full md:w-1/3 mb-6 md:mb-0">
+                                    <div class="w-full md:w-1/2 mb-6 md:mb-0">
                                         <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
                                             Borrow Date Book :
                                         </label>
@@ -138,34 +131,18 @@ export default function BorrowEdit({ borrow, errors, books, students }) {
                                             className="mt-2"
                                         />
                                     </div>
-                                    <div class="w-full md:w-1/3 mb-6 md:mb-0 pl-3">
-                                        <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
-                                            Return Date Book :
-                                        </label>
-                                        <input
-                                            class="appearance-none block w-full bg-white text-gray-700 border rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
-                                            type="date"
-                                            value={returnDate}
-                                            onChange={(e) =>
-                                                setReturnDate(e.target.value)
-                                            }
-                                        />
-                                        <InputError
-                                            message={errors.returnDate}
-                                            className="mt-2"
-                                        />
-                                    </div>
-                                    <div class="w-full md:w-1/3 mb-6 md:mb-0 pl-3">
+                                    <div class="w-full md:w-1/2 mb-6 md:mb-0 pl-3">
                                         <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
                                             Max Return Date Book :
                                         </label>
                                         <input
-                                            class="appearance-none block w-full bg-white text-gray-700 border rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
+                                            focusab
                                             type="date"
                                             value={maxReturnDate}
                                             onChange={(e) =>
                                                 setMaxReturnDate(e.target.value)
                                             }
+                                            class="appearance-none block w-full bg-white text-gray-700 border rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
                                         />
                                         <InputError
                                             message={errors.maxReturnDate}

@@ -128,10 +128,9 @@ class BorrowController extends Controller
                 $newbook->status = 'NOTAVAILABLE';
                 $newbook->save();
                 //dd($lastbook);
-            }
-            else {
+            } else {
                 $borrow->book_id = $borrow->book_id;
-            } 
+            }
             $borrow->student_id = $request->selectedStudent;
             $borrow->borrow_date = $request->borrowDate;
             $borrow->return_date = $request->returnDate;
@@ -159,18 +158,44 @@ class BorrowController extends Controller
         return redirect()->route('borrow.index');
     }
 
-    public function return(Request $request, string $borrowid, string $bookid)
+
+    public function formreturn(Request $request, string $borrowid)
     {
-        dd($request);
-        $book = Borrow::findorfail($bookid);
+        $borrow = Borrow::with('book', 'student')->findOrFail($borrowid);
 
-        $borrow = Borrow::findOrFail($borrowid);
-        $borrow->status = "RETURN";
-        $borrow->save();
-        //redirect
-        return redirect()->route('borrow.index');
-
+        return Inertia::render('Borrow/BorrowDetail', [
+            'borrow' => $borrow,
+        ]);
     }
+
+    /**
+     * return book the specified resource from storage.
+     */
+
+    public function returnbook(Request $request, string $borrowid, string $bookid)
+    {
+        try {
+            $request->validate([
+                'returnDate' => 'required|date|after_or_equal:borrowDate',
+            ]);
+            DB::beginTransaction();
+
+            $borrow = Borrow::findOrFail($borrowid);
+            $borrow->return_date = $request->returnDate;
+            $borrow->status = "RETURN";
+            $borrow->save();
+            $book = Book::findOrFail($bookid);
+            $book->status = "AVAILABLE";
+            $book->save();
+            DB::commit();
+
+            return redirect()->route('borrow.index');
+        } catch (Exception $exception) {
+            DB::rollBack();
+            return redirect()->route('borrow.index')->withInput()->withErrors(['error' => $exception->getMessage()]);
+        }
+    }
+
 
     /**
      * Display report monthly.
