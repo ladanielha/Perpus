@@ -2,22 +2,42 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
-     /**
-     * Create a new AuthController instance.
-     *
-     * @return void
-     */
-    public function __construct()
+    public function register(Request $request)
     {
-        // $this->middleware('auth:api', ['except' => ['login']]);
-        
+        $validator = Validator::make($request->all(), [
+            'name' => 'required',
+            'email' => 'required|email|unique:users',
+            'password' => 'required|min:8'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        }
+
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => bcrypt($request->password)
+        ]);
+
+        if ($user) {
+            return response()->json([
+                'success' => true,
+                'user' => $user,
+            ], 201);
+        }
+
+        return response()->json([
+            'success' => false,
+        ], 409);
     }
 
     /**
@@ -28,8 +48,9 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'email'     => 'required|email',
-            'password'  => 'required'
+            'email' => 'required|email',
+            'password' => 'required'
+
         ]);
 
         if ($validator->fails()) {
@@ -37,22 +58,24 @@ class AuthController extends Controller
         }
         $credentials = $request->only('email', 'password');
 
-        if(!$token = auth()->attempt($credentials)) {
+        if (!$token = auth()->guard('api')->attempt($credentials)) {
+
             return response()->json([
                 'success' => false,
-                'message' => 'Email atau Password Anda salah'
+                'message' => 'Credentials not match'
             ], 401);
         }
-
+        $user = User::where('email', $request->email)->first();
         return response()->json([
-            'success' => true,
-            'user'    => auth()->user(),
-            'token'   => $token
-        ], 200)->header('Authorization', 'Bearer ' . $token);
-    
+            'user' => $user,
+            'access_token' => $token,
+            'token_type' => 'bearer',
+            'expires_in' => 120 * 60
+        ], 200);
+
     }
-    
-     /**
+
+    /**
      * Get the authenticated User.
      *
      * @return \Illuminate\Http\JsonResponse
@@ -73,30 +96,5 @@ class AuthController extends Controller
 
         return response()->json(['message' => 'Successfully logged out']);
     }
-
-    /**
-     * Refresh a token.
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function refresh()
-    {
-        return $this->respondWithToken(auth()->refresh());
-    }
-
-    /**
-     * Get the token array structure.
-     *
-     * @param  string $token
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    protected function respondWithToken($token)
-    {
-        return response()->json([
-            'access_token' => $token,
-            'token_type' => 'bearer',
-            'expires_in' => 120 * 60
-        ]);
-    }
+  
 }
