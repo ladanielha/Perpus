@@ -60,7 +60,7 @@ class BorrowController extends Controller
             DB::beginTransaction();
             $borrowDate = $request->borrowDate;
             $returnDays = Setting::latest()->first()->return_days;
-            $maxReturnDate = date('Y-m-d', strtotime("+$returnDays days", strtotime($borrowDate)));
+            $maxReturnDate = date('Y-m-d', strtotime("+ $returnDays days", strtotime($borrowDate)));
             $borrow = Borrow::create([
                 'student_id' => $request->selectedStudent,
                 'book_id' => $request->selectedBook,
@@ -128,9 +128,7 @@ class BorrowController extends Controller
                 $newbook->status = 'NOTAVAILABLE';
                 $newbook->save();
                 //dd($lastbook);
-            } else {
-                $borrow->book_id = $borrow->book_id;
-            }
+            } 
             $borrow->student_id = $request->selectedStudent;
             $borrow->borrow_date = $request->borrowDate;
             $borrow->return_date = $request->returnDate;
@@ -162,7 +160,6 @@ class BorrowController extends Controller
     public function formreturn(Request $request, string $borrowid)
     {
         $borrow = Borrow::with('book', 'student')->findOrFail($borrowid);
-
         return Inertia::render('Borrow/BorrowDetail', [
             'borrow' => $borrow,
         ]);
@@ -179,7 +176,6 @@ class BorrowController extends Controller
         ]);
         try {
             DB::beginTransaction();
-
             $borrow = Borrow::findOrFail($borrowid);
             $borrow->return_date = $request->returnDate;
             $borrow->status = "RETURN";
@@ -188,7 +184,6 @@ class BorrowController extends Controller
             $book->status = "AVAILABLE";
             $book->save();
             DB::commit();
-
             return redirect()->route('borrow.index');
         } catch (Exception $exception) {
             DB::rollBack();

@@ -18,45 +18,45 @@ export default function BorrowList({ auth }) {
     const [selectedBook, setSelectedBook] = useState(null);
     const [setdata, setData] = useState(null);
 
-    const handleReturnClick = (bookId) => {
-        console.log(bookId.id);
-        setData(bookId);
-        setReturnDate("");
-        setSelectedBorrowId(bookId.id);
-        setSelectedBook(bookId.book_id);
-        setModalOpen(true);
-    };
-    const handleCloseModal = () => {
-        setModalOpen(false);
-    };
-    const handleOpenModal = () => {
-        setModalOpen(true);
-    };
-    const handleReturnConfirm = () => {
-        console.log("Return Date:", returnDate);
-        console.log("Selected Book:", selectedBook);
-        router.put(
-            `/borrow/return/${selectedBorrowId}/${selectedBook}`,
-            {
-                returnDate,
-                selectedBook,
-                borrowData: setdata, // Assuming setdata contains the data from borrow[0]
-            },
-            {
-                onSuccess: () => {
-                    //show notif alert
-                    Swal.fire({
-                        title: "Success!",
-                        text: "Book Return successfully!",
-                        icon: "success",
-                        showConfirmButton: false,
-                        timer: 1500,
-                    });
-                    setModalOpen(false); // Close the modal on success
-                },
-            }
-        );
-    };
+    // const handleReturnClick = (bookId) => {
+    //     console.log(bookId.id);
+    //     setData(bookId);
+    //     setReturnDate("");
+    //     setSelectedBorrowId(bookId.id);
+    //     setSelectedBook(bookId.book_id);
+    //     setModalOpen(true);
+    // };
+    // const handleCloseModal = () => {
+    //     setModalOpen(false);
+    // };
+    // const handleOpenModal = () => {
+    //     setModalOpen(true);
+    // };
+    // const handleReturnConfirm = () => {
+    //     console.log("Return Date:", returnDate);
+    //     console.log("Selected Book:", selectedBook);
+    //     router.put(
+    //         `/borrow/return/${selectedBorrowId}/${selectedBook}`,
+    //         {
+    //             returnDate,
+    //             selectedBook,
+    //             borrowData: setdata, // Assuming setdata contains the data from borrow[0]
+    //         },
+    //         {
+    //             onSuccess: () => {
+    //                 //show notif alert
+    //                 Swal.fire({
+    //                     title: "Success!",
+    //                     text: "Book Return successfully!",
+    //                     icon: "success",
+    //                     showConfirmButton: false,
+    //                     timer: 1500,
+    //                 });
+    //                 setModalOpen(false); // Close the modal on success
+    //             },
+    //         }
+    //     );
+    // };
 
     return (
         <AuthenticatedLayout>
@@ -135,9 +135,9 @@ export default function BorrowList({ auth }) {
                                         </td>
                                         <td className=" px-6 py-4">
                                             <span
-                                                className={`border rounded-md px-2 py-2 text-sm ${
+                                                className={`text-sm px-3 text-black rounded-full ${
                                                     borrow.status === "RETURN"
-                                                        ? "bg-green-400 "
+                                                        ? "bg-green-400"
                                                         : "bg-red-400"
                                                 }`}
                                             >
@@ -147,7 +147,7 @@ export default function BorrowList({ auth }) {
                                             </span>
                                         </td>
                                         <td className="whitespace-nowrap px-6 py-4">
-                                            <div className="flex gap-2">
+                                            <div className="flex gap-2 justify-center">
                                                 {borrow.status === "RETURN" ? (
                                                     ""
                                                 ) : (

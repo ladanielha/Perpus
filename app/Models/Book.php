@@ -6,13 +6,15 @@ use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Builder;
+
 
 class Book extends Model
 {
     use HasFactory, HasUlids;
 
-     /**
+    /**
      * fillable
      *
      * @var array
@@ -48,11 +50,25 @@ class Book extends Model
         return $this->belongsTo(Location::class);
     }
 
+    public function borrow(): HasMany
+    {
+        return $this->hasMany(Borrow::class);
+    }
+
     /**
-    * Get the book that owns the book_issue
-    */
+     * Get the book that owns the book_issue
+     */
     protected $casts = [
-        'created_at' => 'datetime:d-m-Y',
-        'updated_at' => 'datetime:d-m-Y',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
     ];
+
+    public function scopeSearchBook (Builder $query , $name)  {
+        //query book seperti judul buku 
+        return $query->where('name', 'like', '%' .$name. '%');
+    }
+    public function scopeSearchAuthor (Builder $query , string $name)  {
+        //query book seperti author buku 
+        return $query->where('author', 'like', '%' .$name. '%');
+    }
 }

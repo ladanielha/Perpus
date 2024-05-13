@@ -52,7 +52,7 @@ export default function PublisherList() {
                                             {publisher.name}
                                         </td>
                                         <td className="whitespace-nowrap px-6 py-4">
-                                            <div className="flex gap-2">
+                                            <div className="flex gap-2 justify-center">
                                                 <Link
                                                     href={`publisher/edit/${publisher.id}`}
                                                 >

@@ -85,7 +85,7 @@ export default function Dashboard({ auth }) {
                                         </td>
                                         <td className="whitespace-wrap px-6 py-4">
                                             <span
-                                                className={`border rounded-md px-2 py-2 text-sm ${
+                                                className={`text-sm px-3 text-black rounded-full ${
                                                     book.status === "AVAILABLE"
                                                         ? "bg-green-400 "
                                                         : "bg-red-400"

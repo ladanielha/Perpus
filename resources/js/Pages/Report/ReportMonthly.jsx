@@ -68,7 +68,6 @@ export default function Dashboard({ auth }) {
                                     <th scope="col" className=" px-6 py-4">
                                         Status
                                     </th>
-                                   
                                 </tr>
                             </thead>
                             <tbody>
@@ -93,17 +92,17 @@ export default function Dashboard({ auth }) {
                                         </td>
                                         <td className=" px-6 py-4">
                                             {formatDatetime(borrow.return_date)
-                                                ? formatDatetime(
-                                                      borrow.return_date
-                                                  )
-                                                : "Not"}
+                                                ? 
+                                                formatDatetime(borrow.return_date)
+                                                : "Not"
+                                            }
                                         </td>
                                         <td className=" px-6 py-4">
                                             {formatDate(borrow.return_day)}
                                         </td>
                                         <td className=" px-6 py-4">
                                             <span
-                                                className={`border rounded-md px-2 py-2 text-sm ${
+                                                className={`text-sm px-3 text-black rounded-full ${
                                                     borrow.status === "RETURN"
                                                         ? "bg-green-400 "
                                                         : "bg-red-400"

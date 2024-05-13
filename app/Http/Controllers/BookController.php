@@ -19,10 +19,7 @@ class BookController extends Controller
      */
     public function index()
     {
-        $books = Book::when(request()->q, function ($books) {
-            $books = $books->where('name', 'like', '%' . request()->q . '%');
-        })->with('publisher', 'category', 'location')->latest()->paginate(5);
-        $books->appends(['q' => request()->q]);
+        $books = Book::searchBook(request()->q ?? "")->with('publisher', 'category', 'location')->latest()->paginate(5);
         return Inertia::render('Books/BookList', [
             'books' => $books,
         ]);
@@ -51,8 +48,8 @@ class BookController extends Controller
         try {
             DB::beginTransaction();
             $request->validate([
-                'name' => 'required|min:3|max:100',
-                'authorname' => 'required|min:3|max:100',
+                'name' => 'required|min:3|max:250',
+                'authorname' => 'required|min:3|max:250',
                 'selectedCategories' => 'required',
                 'selectedLocation' => 'required',
                 'selectedPublisher' => 'required',
@@ -110,29 +107,21 @@ class BookController extends Controller
             DB::beginTransaction();
             // Validasi input
             $request->validate([
-                'name' => 'required|min:3|max:100',
-                'authorname' => 'required|min:3|max:100',
+                'name' => 'required|min:3|max:250',
+                'authorname' => 'required|min:3|max:250',
                 'selectedCategories' => 'required',
                 'selectedLocation' => 'required',
                 'selectedPublisher' => 'required',
             ]);
             $book = Book::findOrFail($id);
-            if (
-                $request->name != $book->name ||
-                $request->authorname != $book->author ||
-                $request->selectedCategories != $book->category_id ||
-                $request->selectedLocation != $book->location_id ||
-                $request->selectedPublisher != $book->publisher_id
-            ) {
-                $book->name = $request->name;
-                $book->author = $request->authorname;
-                $book->category_id = $request->selectedCategories;
-                $book->location_id = $request->selectedLocation;
-                $book->publisher_id = $request->selectedPublisher;
-                $book->save();
-                DB::commit();
-                return redirect()->route('books.index');
-            }
+            $book->name = $request->name;
+            $book->author = $request->authorname;
+            $book->category_id = $request->selectedCategories;
+            $book->location_id = $request->selectedLocation;
+            $book->publisher_id = $request->selectedPublisher;
+            $book->save();
+            DB::commit();
+            return redirect()->route('books.index');
         } catch (\Exception $exception) {
             DB::rollBack();
             return redirect()->back()->withInput()->withErrors(['error' => $exception->getMessage()]);
@@ -145,6 +134,9 @@ class BookController extends Controller
      */
     public function destroy($id)
     {
+        //try catch dbtransaction
+
+
         //Get books by id
         $book = Book::findOrFail($id);
         //Delete books
