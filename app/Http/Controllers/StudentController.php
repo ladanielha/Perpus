@@ -48,7 +48,6 @@ class StudentController extends Controller
      */
     public function store(Request $request)
     {
-
         /**
          * Validate request books
          */
@@ -59,7 +58,6 @@ class StudentController extends Controller
             'address' => 'required',
             'classes' => 'required',
         ]);
-
         //create students
         $students = Student::create([
             'name' => $request->name,
@@ -68,7 +66,6 @@ class StudentController extends Controller
             'address' => $request->address,
             'class' => $request->classes,
         ]);
-
         //redirect
         return redirect()->route('student.index');
     }

@@ -15,6 +15,7 @@ Route::middleware('auth:api')->group(function () {
 
     //Student API
     Route::get('/students', [StudentAPIController::class, 'getStudentList']);
+    Route::post('/students', [StudentAPIController::class, 'createStudent']);
 
     //Category API
     Route::get('/categories', [CategoryAPIController::class, 'getCategoryList']);
