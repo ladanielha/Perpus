@@ -160,14 +160,6 @@ export default function BorrowList({ auth }) {
                                                         </PrimaryButton>
                                                     </Link>
                                                 )}
-                                                <Link
-                                                    href={`borrow/edit/${borrow.id}`}
-                                                    className="border-spacing-3 "
-                                                >
-                                                    <PrimaryButton>
-                                                        Edit
-                                                    </PrimaryButton>
-                                                </Link>
                                                 {borrow.status === "RETURN" ? (
                                                     ""
                                                 ) : (

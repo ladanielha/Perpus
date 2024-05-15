@@ -7,6 +7,8 @@ use App\Http\Controllers\API\CategoryAPIController;
 use App\Http\Controllers\API\PublisherAPIController;
 use App\Http\Controllers\API\StudentAPIController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Http\Request;
+
 
 
 Route::middleware('auth:api')->group(function () {
@@ -22,13 +24,19 @@ Route::middleware('auth:api')->group(function () {
 
     //Book API
     Route::get('/books', [BookAPIController::class, 'getBookList']);
+    Route::post('/books', [BookAPIController::class, 'createBook']);
 
     //Borrow API
     Route::get('/borrows', [BorrowAPIController::class, 'getBorrowList']);
     Route::post('/borrow', [BorrowAPIController::class, 'createBorrow']);
 
+    //Rute user 
     Route::get('/me', [AuthController::class, 'me']);
+    Route::post('/auth/logout', [AuthController::class, 'logout']);
+});
 
+Route::middleware('auth:api')->get('/user', function (Request $request) {
+    return $request->user();
 });
 
 //Auth Login
