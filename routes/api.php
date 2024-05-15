@@ -11,7 +11,7 @@ use Illuminate\Http\Request;
 
 
 
-Route::middleware('auth:api')->group(function () {
+Route::middleware(['isvalidate'])->group(function () {
 
     //Student API
     Route::get('/students', [StudentAPIController::class, 'getStudentList']);
@@ -35,12 +35,8 @@ Route::middleware('auth:api')->group(function () {
 
 
     //Rute user 
-    Route::get('/me', [AuthController::class, 'me']);
+    Route::get('/auth/user', [AuthController::class, 'me']);
     Route::post('/auth/logout', [AuthController::class, 'logout']);
-});
-
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
 });
 
 //Auth Login

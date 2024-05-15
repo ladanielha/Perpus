@@ -30,7 +30,7 @@ class BorrowAPIController extends Controller
                     'message' => 'The selected book does not available.'
                 ], 404);
             }
-           
+
             $borrowDate = $request->input('borrowDate');
             $returnDays = Setting::latest()->first()->return_days;
             $maxReturnDate = date('Y-m-d', strtotime("+$returnDays days", strtotime($borrowDate)));
@@ -47,7 +47,7 @@ class BorrowAPIController extends Controller
             DB::commit();
             return response()->json($borrow, 201);
         } catch (Exception $exception) {
-            DB::rollBack();    
+            DB::rollBack();
             return response()->json([
                 'message' => 'An error occurred while processing your request please try again later',
                 'error' => $exception->getMessage()
@@ -57,9 +57,16 @@ class BorrowAPIController extends Controller
 
     public function returnBook(Request $request, string $borrowid, string $bookid)
     {
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'returnDate' => 'required|date|after_or_equal:borrowDate',
+        ],[
+            'returnDate' => 'Return date field is required',
+            'returnDate' => 'Return date field is required',
         ]);
+
+        if (!$validator->fails()) {
+            return response()->json(['message' => 'Validation failed', 'errors' => $validator->errors()], 422);
+        }
         try {
             DB::beginTransaction();
             $borrow = Borrow::findOrFail($borrowid);
