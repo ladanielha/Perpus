@@ -49,7 +49,32 @@ class BorrowAPIController extends Controller
         } catch (Exception $exception) {
             DB::rollBack();    
             return response()->json([
-                'message' => 'An error occurred while processing your request',
+                'message' => 'An error occurred while processing your request please try again later',
+                'error' => $exception->getMessage()
+            ], 500);
+        }
+    }
+
+    public function returnBook(Request $request, string $borrowid, string $bookid)
+    {
+        $request->validate([
+            'returnDate' => 'required|date|after_or_equal:borrowDate',
+        ]);
+        try {
+            DB::beginTransaction();
+            $borrow = Borrow::findOrFail($borrowid);
+            $borrow->return_date = $request->returnDate;
+            $borrow->status = "RETURN";
+            $borrow->save();
+            $book = Book::findOrFail($bookid);
+            $book->status = "AVAILABLE";
+            $book->save();
+            DB::commit();
+            return response()->json($borrow, 201);
+        } catch (Exception $exception) {
+            DB::rollBack();
+            return response()->json([
+                'message' => 'An error occurred while processing your request please try again later',
                 'error' => $exception->getMessage()
             ], 500);
         }

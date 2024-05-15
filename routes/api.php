@@ -29,6 +29,9 @@ Route::middleware('auth:api')->group(function () {
     //Borrow API
     Route::get('/borrows', [BorrowAPIController::class, 'getBorrowList']);
     Route::post('/borrow', [BorrowAPIController::class, 'createBorrow']);
+    Route::post('/borrow', [BorrowAPIController::class, 'createBorrow']);
+    Route::patch('/borrow/return/{borrowid}/{bookid}', [BorrowAPIController::class, 'returnBook']);
+
 
     //Rute user 
     Route::get('/me', [AuthController::class, 'me']);
