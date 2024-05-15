@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\ApiMiddleware;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -20,10 +21,11 @@ return Application::configure(basePath: dirname(__DIR__))
             \Illuminate\Http\Middleware\AddLinkHeadersForPreloadedAssets::class,
         ]);
         $middleware->group('api', [
+            \App\Http\Middleware\ApiMiddleware::class
         ]);
 
         //
     })
     ->withExceptions(function (Exceptions $exceptions) {
-         //
+        //
     })->create();
